@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.worsley'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    integrationImplementation.extendsFrom testImplementation
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+testing {
+    suites {
+        integration(JvmTestSuite) {
+            dependencies {
+                implementation project()
+            }
+            sources {
+                java {
+                    srcDirs = ["src/integration/java"]
+                }
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
