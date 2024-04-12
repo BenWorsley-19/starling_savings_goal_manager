@@ -1,19 +1,14 @@
 package com.worsley.service;
 
-import com.worsley.client.AccountsClient;
-import com.worsley.client.SavingsGoalsClient;
-import com.worsley.client.TransactionsClient;
+
+import com.worsley.client.StarlingApiClient;
 
 public class SavingsGoalsManager {
 
-    private final TransactionsClient transactionsClient;
-    private final AccountsClient accountsClient;
-    private final SavingsGoalsClient savingsGoalsClient;
+    private final StarlingApiClient starlingApiClient;
 
-    public SavingsGoalsManager(TransactionsClient transactionsClient, AccountsClient accountsClient, SavingsGoalsClient savingsGoalsClient) {
-        this.transactionsClient = transactionsClient;
-        this.accountsClient = accountsClient;
-        this.savingsGoalsClient = savingsGoalsClient;
+    public SavingsGoalsManager(StarlingApiClient starlingApiClient) {
+        this.starlingApiClient = starlingApiClient;
     }
 
     /**

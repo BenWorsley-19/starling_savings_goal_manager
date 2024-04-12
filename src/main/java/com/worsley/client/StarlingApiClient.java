@@ -1,11 +1,11 @@
 package com.worsley.client;
 
-import com.worsley.client.response.StarlingResponse;
+import com.worsley.dto.Account;
 
 import java.io.IOException;
+import java.util.Set;
 
 public interface StarlingApiClient {
 
-    <T> T makeGetRequest(String relativePath, Class<T> responseClass) throws IOException;
-    <T> T makePutRequest(String relativePath, Class<T> responseClass) throws IOException;
+    Set<Account> getAccounts() throws IOException;
 }
