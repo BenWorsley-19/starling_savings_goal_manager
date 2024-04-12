@@ -1,7 +1,7 @@
 package com.worsley;
 
 
-import com.worsley.service.TransactionRetriever;
+import com.worsley.client.TransactionsClient;
 import java.net.http.HttpClient;
 
 public class Main {
@@ -18,7 +18,7 @@ public class Main {
         NOTE_FOR_REVIEWER: I could extract this to a Factory or use a Dependency Injection framework such as Guice
         or Spring but for the sake of this tech test to keep it simple I am leaving it here.
          */
-        TransactionRetriever transactionRetriever = new TransactionRetriever(httpClient);
-        transactionRetriever.getTransactionsInWeek(); // TODO
+        TransactionsClient transactionRetriever = new TransactionsClient(httpClient);
+//        transactionRetriever.getTransactionsInWeek(); // TODO
     }
 }
