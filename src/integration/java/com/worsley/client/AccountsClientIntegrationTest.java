@@ -7,7 +7,8 @@ public class AccountsClientIntegrationTest {
 
     @Test
     void validRequest_TODONAME_returnsAccounts() throws Exception {
-        AccountsClient accountsClient = new AccountsClient();
+        StarlingApiClient starlingApiClient = new ApacheStarlingApiClient();
+        AccountsClient accountsClient = new AccountsClient(starlingApiClient);
         accountsClient.getAccounts();
     }
 }

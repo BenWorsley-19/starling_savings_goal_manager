@@ -3,6 +3,7 @@ package com.worsley.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worsley.client.response.AccountsResponse;
+import com.worsley.client.response.StarlingResponse;
 import com.worsley.dto.Account;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -23,38 +24,24 @@ import java.util.Set;
 
 public class AccountsClient {
 
-    public static final String STARLING_BASE_URL = "https://api-sandbox.starlingbank.com/api/v2/"; // TODO find home for this constant
-
-//    private final HttpClient httpClient;
+    private final StarlingApiClient starlingApiClient;
     private final ObjectMapper objectMapper;
 
-    public AccountsClient() { //(HttpClient httpClient) {
-//        this.httpClient = httpClient;
+    public AccountsClient(StarlingApiClient starlingApiClient) {
+        this.starlingApiClient = starlingApiClient;
         this.objectMapper = new ObjectMapper(); // TODO?
     }
 
     public Set<Account> getAccounts() throws URISyntaxException, IOException, InterruptedException { // TODO throe all these? maybe retry
-
-        Set<Account> accounts = new HashSet<>();
-
-        // TODO update readme with this
         /*
-        NOTE_FOR_REVIEWER: So not to store the secret in plain text.
+        NOTE_FOR_REVIEWER: decided to throw URISyntaxException because if there is a     problem with the uri
+        that's a programming error, and we can't recover from that, so we should error.
          */
-        String authToken = System.getenv("STARLING_AUTH_TOKEN");
+//        StarlingResponse response = starlingApiClient.makeGetRequest("accounts");
+        AccountsResponse response = starlingApiClient.makeGetRequest("accounts", AccountsResponse.class);
 
-        final HttpGet request = new HttpGet(URI.create(STARLING_BASE_URL + "accounts"));
-        request.addHeader("Authorization", "Bearer " + authToken);
-        request.addHeader("Accept", "application/json");
-
-        try(CloseableHttpClient client = HttpClients.createDefault();
-            CloseableHttpResponse response = client.execute(request)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                // TODO
-            }
-            AccountsResponse accountsResponse = objectMapper.readValue(EntityUtils.toString(response.getEntity()), new TypeReference<AccountsResponse>(){});
-            accounts = accountsResponse.accounts();
-        }
+//        AccountsResponse accountsResponse = objectMapper.readValue(response.response(), new TypeReference<AccountsResponse>(){});
+//        Set<Account> accounts = accountsResponse.accounts();
 
         // TODO explain reason for issue
 //        HttpRequest request = HttpRequest.newBuilder()
@@ -70,6 +57,6 @@ public class AccountsClient {
 //            .build();
 //        HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        return accounts;
+        return response.accounts();
     }
 }
