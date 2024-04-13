@@ -1,29 +1,31 @@
 package com.worsley.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worsley.client.exception.StarlingApiException;
 import com.worsley.client.response.AccountsResponse;
 import com.worsley.client.response.ResponseWithCode;
+import com.worsley.client.response.TransactionsResponse;
 import com.worsley.dto.Account;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import com.worsley.dto.Transaction;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 public class ApacheStarlingApiClient implements StarlingApiClient {
 
     private static Logger logger = LoggerFactory.getLogger(ApacheStarlingApiClient.class);
-    public static final String STARLING_BASE_URL = "https://api-sandbox.starlingbank.com/api/v2/";
+    private static final String STARLING_BASE_URL = "https://api-sandbox.starlingbank.com/api/v2/";
+    private static final String ACCOUNTS_RELATIVE_PATH = "accounts";
+    private static final String SETTLED_TRANSACTIONS_BETWEEN_RELATIVE_PATH = "feed/account/%s/settled-transactions-between?minTransactionTimestamp=%s&maxTransactionTimestamp=%s";
+    private final DateTimeFormatter dateTimeFormatter;
 
     private final ObjectMapper objectMapper;
     private final ApacheHttpClientWrapper client;
@@ -31,12 +33,22 @@ public class ApacheStarlingApiClient implements StarlingApiClient {
     public ApacheStarlingApiClient(ObjectMapper objectMapper, ApacheHttpClientWrapper client) {
         this.objectMapper = objectMapper;
         this.client = client;
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
     }
 
     @Override
     public Set<Account> getAccounts() throws IOException {
-        AccountsResponse response = makeGetRequest("accounts", AccountsResponse.class);
+        AccountsResponse response = makeGetRequest(ACCOUNTS_RELATIVE_PATH, AccountsResponse.class);
         return response.accounts();
+    }
+
+    @Override
+    public Set<Transaction> getTransations(String accountUid, ZonedDateTime minTransactionTimestamp, ZonedDateTime maxTransactionTimestamp) throws IOException {
+        String fromDate = minTransactionTimestamp.format(dateTimeFormatter);
+        String toDate = maxTransactionTimestamp.format(dateTimeFormatter);
+        String relativePath = String.format(SETTLED_TRANSACTIONS_BETWEEN_RELATIVE_PATH, accountUid, fromDate, toDate);
+        TransactionsResponse response = makeGetRequest(relativePath, TransactionsResponse.class);
+        return response.feedItems();
     }
 
     private <T> T makeGetRequest(String relativePath, Class<T> responseClass) throws IOException {
