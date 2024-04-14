@@ -11,6 +11,9 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * A manager for savings goals
+ */
 public class SavingsGoalsManager {
 
     private final StarlingApiClient starlingApiClient;
@@ -20,13 +23,11 @@ public class SavingsGoalsManager {
     }
 
     /**
-     * Rounds up the transactions in the given week and adds to them to the specified Savings Goal
-     * such that with spending of £4.35, £5.20 and £0.87, then £1.58 would be added to the
-     * Savings Goal.
+     * Put the roundup of transactions between the given times into a savings goal
      *
-     * @param weekOfTransactions // TODO state format - maybe this needs to be from/to
-     * @param savingsGoalUuid
-     * // TODO
+     * @param minTransactionTimestamp the earliest transaction timestamp to include
+     * @param maxTransactionTimestamp the latest transaction timestamp to include
+     * @param savingsGoalUuid the savings goal to put the roundup into
      */
     public void putRoundupOfTransactionsIntoGoal(ZonedDateTime minTransactionTimestamp, ZonedDateTime maxTransactionTimestamp, UUID savingsGoalUuid) throws IOException {
         Set<Account> accounts = starlingApiClient.getAccounts();

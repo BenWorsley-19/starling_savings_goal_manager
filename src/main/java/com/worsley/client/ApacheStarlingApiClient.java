@@ -25,6 +25,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.UUID;
 
+/*
+NOTE_FOR_REVIEWER: I originally implemented using the built in Java HTTP client so to avoid the extra dependency. However
+I believe there may be a bug with the API. The built in HttpClient adds a Content-Length: 0 header to GET requests but when
+you call your API for accounts it returns a 400. Making the request in Postman with that header removed works fine but with
+breaks. I did not have time to investigate this fully so just switched to Apache and moved forward.
+ */
 public class ApacheStarlingApiClient implements StarlingApiClient {
 
     private static final Logger logger = LoggerFactory.getLogger(ApacheStarlingApiClient.class);
