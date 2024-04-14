@@ -18,6 +18,8 @@ Some things I would have liked to have done if I had more time:
 - Build out a REST API
 - Consider error handling further
 - Consider design around api client. Class is currently doing a fair bit -  is it best to split more of it out
+- Add to unit test details of the request such as what headers are added
+- Add to unit test details of the request such as what headers are added
 - Bulk out integration tests
 - Provide mock servers for integration tests
 - Implement refresh of OAuth
