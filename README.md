@@ -8,11 +8,12 @@ Solution to the Starling Tech Test
 - Set up environment variables for the Starling API
   - `STARLING_AUTH_TOKEN`
 
-## Notes for review
+## Notes for reviewr
+
+Start from Main, make sure you have the prequisites set up and give it a run :)
 
 Throughout the code I have added notes where I wanted to explain something marked with NOTE_FOR_REVIEWER. I wouldn't 
-usually put this level of comments in the code and it does make the code look a bit messy but I wanted to explain my
-thought process.
+usually do this and it does make the code look a bit messy but I wanted to explain my thought process.
 
 Some things I would have liked to have done if I had more time:
 - Build out a REST API

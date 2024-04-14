@@ -24,6 +24,10 @@ public class Main {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
         ZonedDateTime fromDate = ZonedDateTime.parse("2024-04-08T20:31:42.765Z", formatter);
         ZonedDateTime toDate = ZonedDateTime.parse("2024-04-15T20:31:42.765Z", formatter);
+        /*
+        NOTE_FOR_REVIEWER: I am using a hardcoded UUID here for the sake of this tech test. In a real world scenario I
+        would implement REST API or accept args from the command line to get the UUID of the savings goal.
+         */
         UUID savingsGoalUui = UUID.fromString("95481e49-8f85-43f5-9c29-c9639f17eccf");
         savingsGoalsManager.putRoundupOfTransactionsIntoGoal(fromDate, toDate, savingsGoalUui);
     }

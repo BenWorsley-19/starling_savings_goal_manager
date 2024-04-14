@@ -19,7 +19,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.9.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
     implementation 'org.apache.httpcomponents:httpclient:4.5'
-    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    implementation 'org.slf4j:slf4j-simple:2.0.13'
+
 }
 
 
