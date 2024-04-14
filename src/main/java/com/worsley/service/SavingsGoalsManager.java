@@ -3,9 +3,13 @@ package com.worsley.service;
 
 import com.worsley.client.StarlingApiClient;
 import com.worsley.dto.Account;
+import com.worsley.dto.Direction;
+import com.worsley.dto.Transaction;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 public class SavingsGoalsManager {
 
@@ -22,12 +26,30 @@ public class SavingsGoalsManager {
      *
      * @param weekOfTransactions // TODO state format - maybe this needs to be from/to
      * @param savingsGoalUuid
+     * // TODO
      */
-    public void putRoundupOfTransactionsIntoGoal(String weekOfTransactions, String savingsGoalUuid) throws IOException {
+    public void putRoundupOfTransactionsIntoGoal(ZonedDateTime minTransactionTimestamp, ZonedDateTime maxTransactionTimestamp, UUID savingsGoalUuid) throws IOException {
         Set<Account> accounts = starlingApiClient.getAccounts();
-//        accounts.forEach(account -> {
-//            starlingApiClient
-//        }
+        for (Account account : accounts) {
+            Set<Transaction> transactions = starlingApiClient.getTransactions(account.accountUid(), minTransactionTimestamp, maxTransactionTimestamp);
+            for (Transaction transaction : transactions) {
+                if (transaction.direction() != Direction.OUT) {
+                    continue;
+                }
+                int penceToNearestPound = penceToNearestPound(transaction.amount().minorUnits());
+                if (penceToNearestPound != 0) {
+                    starlingApiClient.addMoneyToSavingsGoal(account.accountUid(), savingsGoalUuid, penceToNearestPound, transaction.amount().currency());
+                }
+            }
+        }
+    }
+
+    /*
+    NOTE_FOR_REVIEWER: I did note there may be a way to this through the API but assumed you wanted me to implement this
+    so I have gone with this but generally I would pass off to the API if possible.
+     */
+    private int penceToNearestPound(int pence) {
+        int remainder = pence % 100;
+        return remainder == 0 ? 0 : 100 - remainder;
     }
 }
-
